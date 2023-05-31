@@ -1,77 +1,104 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf_view/bloc/bloc/current_page_bloc.dart';
 
-List<String> mavzu1 = [
-  '1.1. Kriptografiya tarixi',
-  '1.2. Kriptografiya tasnifi',
-  '2.1. Sanoq tizimlari va bitlar arifmetikasi',
+import 'screen/widget/driwer.dart';
+
+class Birnima {
+  String name;
+  int page;
+  Birnima({
+    required this.name,
+    required this.page,
+  });
+}
+
+List<Birnima> mavzu1 = [
+  Birnima(name: '1.1. Kriptografiya tarixi', page: 7),
+  Birnima(name: '1.2. Kriptografiya tasnifi', page: 8),
 ];
 
-List<String> mavzu2 = [
-  '2.2. Butun sonlarning bo‘linish belgisi',
-  '2.3. Tub sonlar',
-  '2.4. Sonlarni ko‘paytuvchilarga yoyish',
-  '2.5. Eng katta umumiy bo‘luvchi',
-  '2.6. Taqqoslama arifmetikasi',
-  '2.7. Orin almashtirishlar',
-  '2.8. Matritsalar',
+List<Birnima> mavzu2 = [
+  Birnima(name: '2.1. Sanoq tizimlari va bitlar arifmetikasi', page: 14),
+  Birnima(name: '2.2. Butun sonlarning bo‘linish belgisi', page: 28),
+  Birnima(name: '2.3. Tub sonlar', page: 31),
+  Birnima(name: '2.4. Sonlarni ko‘paytuvchilarga yoyish', page: 33),
+  Birnima(name: '2.5. Eng katta umumiy bo‘luvchi', page: 34),
+  Birnima(name: '2.6. Taqqoslama arifmetikasi', page: 39),
+  Birnima(name: '2.7. Orin almashtirishlar', page: 47),
+  Birnima(name: '2.8. Matritsalar', page: 55),
 ];
-List<String> mavzu3 = [
-  '3.1. O‘rnigа qo‘yish usuli',
-  '3.2. Monoalifboli o‘rniga qo‘yish usuli',
-  '3.2.1. Sezarusuli',
-  '3.2.2. Affin tizimidagi Sezar usuli',
-  '3.2.3. Tayanchso‘zliSezarusuli',
-  '3.2.4. Polibiykvadrati',
-  '3.2.5. Atbashusuli',
-  '3.2.6. Pleyferusuli',
-  '3.2.7. Omofonusuli',
-  '3.2.8. Vernamusuli',
-  '3.3. Polialifboli o‘rniga qo‘yish usuli',
-  '3.3.1. Gronsfeld usuli',
-  '3.3.2. Vijiner jadvali',
-  '3.3.3. ADFGX usuli',
-  '3.4. O‘rin almashtirish usuli',
-  '3.4.1. Shifrlovchi jadval',
-  '3.4.2. Tayanch so‘zli shifrlovchi jadval',
-  '3.4.3.Matritsa usul',
-  '3.4.4. Sehrli kvadrat',
-  '3.4.5.Gamilton usuli',
-  '3.5. Shifrlashning analitik usullari',
-  '3.5.1. Matritsalarni ko‘paytirish usuli',
-  '3.5.2. Xaltaga buyumlarni joylashtirish masalasi',
-  '3.6. Shifrlashning additiv usullari',
-  '3.6.1.Gammalashtirish usuli',
-  '3.6.2.Uitstonning“ikkikvadrat” usuli',
-  '3.6.3. To‘rt kvadrat usuli',
-  '3.6.4.Xill usuli',
+List<Birnima> mavzu3 = [
+  Birnima(name: '3.1. O‘rnigа qo‘yish usuli', page: 65),
+  Birnima(name: '3.2. Monoalifboli o‘rniga qo‘yish usuli', page: 68),
+  Birnima(name: '3.2.1. Sezarusuli', page: 72),
+  Birnima(name: '3.2.2. Affin tizimidagi Sezar usuli', page: 74),
+  Birnima(name: '3.2.3. Tayanchso‘zliSezarusuli', page: 75),
+  Birnima(name: '3.2.4. Polibiykvadrati', page: 77),
+  Birnima(name: '3.2.5. Atbashusuli', page: 81),
+  Birnima(name: '3.2.6. Pleyferusuli', page: 84),
+  Birnima(name: '3.2.7. Omofonusuli', page: 90),
+  Birnima(name: '3.2.8. Vernamusuli', page: 95),
+  Birnima(name: '3.3. Polialifboli o‘rniga qo‘yish usuli', page: 98),
+  Birnima(name: '3.3.1. Gronsfeld usuli', page: 99),
+  Birnima(name: '3.3.2. Vijiner jadvali', page: 101),
+  Birnima(name: '3.3.3. ADFGX usuli', page: 104),
+  Birnima(name: '3.4. O‘rin almashtirish usuli', page: 106),
+  Birnima(name: '3.4.1. Shifrlovchi jadval', page: 109),
+  Birnima(name: '3.4.2. Tayanch so‘zli shifrlovchi jadval', page: 110),
+  Birnima(name: '3.4.3.Matritsa usul', page: 112),
+  Birnima(name: '3.4.4. Sehrli kvadrat', page: 114),
+  Birnima(name: '3.4.5.Gamilton usuli', page: 115),
+  Birnima(name: '3.5. Shifrlashning analitik usullari', page: 117),
+  Birnima(name: '3.5.1. Matritsalarni ko‘paytirish usuli', page: 117),
+  Birnima(name: '3.5.2. Xaltaga buyumlarni joylashtirish masalasi', page: 121),
+  Birnima(name: '3.6. Shifrlashning additiv usullari', page: 127),
+  Birnima(name: '3.6.1.Gammalashtirish usuli', page: 128),
+  Birnima(name: '3.6.2.Uitstonning“ikkikvadrat” usuli', page: 130),
+  Birnima(name: '3.6.3. To‘rt kvadrat usuli', page: 133),
+  Birnima(name: '3.6.4.Xill usuli', page: 135),
 ];
-List<String> mavzu4 = [
-  '4.1. Kodlashga doir usullar',
-  '4.2. Xaffman usuli',
+List<Birnima> mavzu4 = [
+  Birnima(name: "4.1. Kodlashga doir usullar", page: 140),
+  Birnima(name: '4.2. Xaffman usuli', page: 141),
 ];
-List<String> mavzu5 = [
-  '5.1. N bitli skremblerni qurish va takrorlanish davrini hisoblash',
-  '5.2. Blokli shifrlar yordamida ma’lumotlarni shifrlash',
-  '5.3. Psevdotasodifiy sonlar generatorini va uning dasturiy ta’minotini yaratish',
-  '5.4. RC4 shifrlash algoritmi asosida ma’lumotni shifrlash va deshifrlash dasturini yaratish',
-  '5.5. OpenSSL kutubxonasidan foydalangan holda ma’lumotlarni xesh qiymatini hisoblash'
+List<Birnima> mavzu5 = [
+  Birnima(
+      name: '5.1. N bitli skremblerni qurish va takrorlanish davrini hisoblash',
+      page: 148),
+  Birnima(
+      name: '5.2. Blokli shifrlar yordamida ma’lumotlarni shifrlash',
+      page: 156),
+  Birnima(
+      name:
+          '5.3. Psevdotasodifiy sonlar generatorini va uning dasturiy ta’minotini yaratish',
+      page: 171),
+  Birnima(
+      name:
+          '5.4. RC4 shifrlash algoritmi asosida ma’lumotni shifrlash va deshifrlash dasturini yaratish',
+      page: 187),
+  Birnima(
+      name:
+          '5.5. OpenSSL kutubxonasidan foydalangan holda ma’lumotlarni xesh qiymatini hisoblash',
+      page: 201),
 ];
-List<String> xulosa = [
-  'Tayanch so‘zlar ko‘rsatkichi',
-  'Foydalanilgan adabiyotlar ro‘yxati',
-  'Amaliy dasturlar',
-  'Masalalar javoblari',
+List<Birnima> xulosa = [
+  Birnima(name: 'Tayanch so‘zlar ko‘rsatkichi', page: 221),
+  Birnima(name: 'Foydalanilgan adabiyotlar ro‘yxati', page: 223),
+  Birnima(name: 'Amaliy dasturlar', page: 226),
+  Birnima(name: 'Masalalar javoblari', page: 238),
 ];
 
 PDFViewController? pdfController;
-int targetPage = 2; 
+int targetPage = 0;
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -113,31 +140,37 @@ class _MyAppState extends State<MyApp> {
     final themeData = Theme.of(context);
     return MaterialApp(
       home: Scaffold(
-        body: Builder(
-          builder: (BuildContext context) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    child: Text('Tap to Open Document',
-                        style: themeData.textTheme.headlineMedium
-                            ?.copyWith(fontSize: 21.0)),
-                    onPressed: () {
-                      if (pathPDF.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PDFScreen(path: pathPDF),
-                          ),
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
-            );
-          },
+        body: BlocProvider(
+          create: (context) => CurrentPageBloc(),
+          child: Builder(
+            builder: (BuildContext context) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      child: Text('Tap to Open Document',
+                          style: themeData.textTheme.headlineMedium
+                              ?.copyWith(fontSize: 21.0)),
+                      onPressed: () {
+                        if (pathPDF.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) => CurrentPageBloc(),
+                                child: PDFScreen(path: pathPDF),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -157,8 +190,6 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   late PDFViewController pdfController;
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
-  int pages = 10;
-  int currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
 
@@ -167,258 +198,68 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     return Scaffold(
       drawer: Home(),
       appBar: AppBar(
-        title: const Text("Document"),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          PDFView(
-            defaultPage: 0,
-            onPageChanged: (page, total) {
-              if (kDebugMode) {
-                print("$page,  Totoal: $total");
-              }
-            },
-            filePath: widget.path,
-            onRender: (pages) {
-              setState(() {
-                pages = pages;
-                isReady = true;
-              });
-            },
-            onError: (error) {
-              setState(() {
-                errorMessage = error.toString();
-              });
-              if (kDebugMode) {
-                print(error.toString());
-              }
-            },
-            onPageError: (page, error) {
-              setState(() {
-                errorMessage = '$page: ${error.toString()}';
-              });
-              if (kDebugMode) {
-                print('$page: ${error.toString()}');
-              }
-            },
-            onViewCreated: (PDFViewController pdfViewController) {
-              pdfController = pdfViewController;
-              _controller.complete(pdfViewController);
-            },
-          ),
-          errorMessage.isEmpty
-              ? !isReady
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Container()
-              : Center(
-                  child: Text(errorMessage),
-                )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (pdfController != null) {
-              pdfController.setPage(targetPage);
-            }
-          },
-          child: Icon(Icons.open_in_new),
+        elevation: 0.0,
+        title: const Text(
+          "KRIPTOGRAFIYADAN MISOL VA MASALALAR TO‘PLAMI",
         ),
-      
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  List<bool> expanded = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
-
-  int uzunlik = 40;
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          ExpansionPanelList(
-            expansionCallback: (panelIndex, isExpanded) {
-              setState(() {
-                expanded[panelIndex] = !isExpanded;
-              });
-            },
-            children: [
-              ExpansionPanel(
-                headerBuilder: (context, isOpen) {
-                  return const Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Text("1-bob. KRIPTOGRAFIYANING UMUMIY ASOSLARI"),
-                  );
+      ),
+      body: BlocBuilder<CurrentPageBloc, CurrentPageState>(
+        builder: (context, state) {
+          print(state.selectPage);
+          if (state.selectPage != 0) {
+            if (pdfController != null) {
+              pdfController.setPage(state.selectPage - 1);
+            }
+          }
+          return Stack(
+            children: <Widget>[
+              PDFView(
+                defaultPage: 0,
+                onPageChanged: (page, total) {
+                  if (kDebugMode) {
+                    print("$page,  Totoal: $total");
+                  }
                 },
-                body: Container(
-                  padding: const EdgeInsets.all(20),
-                  width: double.infinity,
-                  child: SizedBox(
-                      height: (uzunlik * mavzu1.length).toDouble(),
-                      child: ListView.builder(
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Text(mavzu1[index]),
-                        ),
-                        itemCount: mavzu1.length,
-                      )),
-                ),
-                isExpanded: expanded[0],
-              ),
-              ExpansionPanel(
-                  headerBuilder: (context, isOpen) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15),
-                      child:
-                          Text("2-bob. KRIPTOGRAFIYANING MATEMATIK ASOSLARI"),
-                    );
-                  },
-                  body: Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: SizedBox(
-                        height: (uzunlik * mavzu2.length).toDouble(),
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(mavzu2[index]),
-                          ),
-                          itemCount: mavzu2.length,
-                        )),
-                  ),
-                  isExpanded: expanded[1]),
-              ExpansionPanel(
-                  headerBuilder: (context, isOpen) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Text("3-bob.SIMMETRIK KALITLISHIFRLASHTIZIMLARI"),
-                    );
-                  },
-                  body: Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: SizedBox(
-                        height: (uzunlik * mavzu3.length).toDouble(),
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(mavzu3[index]),
-                          ),
-                          itemCount: mavzu3.length,
-                        )),
-                  ),
-                  isExpanded: expanded[2]),
-              ExpansionPanel(
-                  headerBuilder: (context, isOpen) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Text("4-bob. KODLASHGA DOIR ODDIY MISOLLAR"),
-                    );
-                  },
-                  body: Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: SizedBox(
-                        height: (uzunlik * mavzu4.length).toDouble(),
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(mavzu4[index]),
-                          ),
-                          itemCount: mavzu4.length,
-                        )),
-                  ),
-                  isExpanded: expanded[3]),
-              ExpansionPanel(
-                  headerBuilder: (context, isOpen) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Text(
-                          "5-bob. AMALIY MASHG‘ULOTLAR UCHUN KO‘RSATMALAR"),
-                    );
-                  },
-                  body: Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    child: SizedBox(
-                        height: (uzunlik * mavzu4.length).toDouble(),
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(mavzu4[index]),
-                          ),
-                          itemCount: mavzu4.length,
-                        )),
-                  ),
-                  isExpanded: expanded[4]),
-              ExpansionPanel(
-                headerBuilder: (context, isOpen) {
-                  return const Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Text("XULOSA"),
-                  );
+                filePath: widget.path,
+                onRender: (pages) {
+                  setState(() {
+                    pages = pages;
+                    isReady = true;
+                  });
                 },
-                body: Container(
-                  padding: const EdgeInsets.all(20),
-                  width: double.infinity,
-                  child: SizedBox(
-                      height: (uzunlik * mavzu5.length).toDouble(),
-                      child: ListView.builder(
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Text(mavzu5[index]),
-                        ),
-                        itemCount: mavzu5.length,
-                      )),
-                ),
-                isExpanded: expanded[5],
+                onError: (error) {
+                  setState(() {
+                    errorMessage = error.toString();
+                  });
+                  if (kDebugMode) {
+                    print(error.toString());
+                  }
+                },
+                onPageError: (page, error) {
+                  setState(() {
+                    errorMessage = '$page: ${error.toString()}';
+                  });
+                  if (kDebugMode) {
+                    print('$page: ${error.toString()}');
+                  }
+                },
+                onViewCreated: (PDFViewController pdfViewController) {
+                  pdfController = pdfViewController;
+                  _controller.complete(pdfViewController);
+                },
               ),
+              errorMessage.isEmpty
+                  ? !isReady
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Container()
+                  : Center(
+                      child: Text(errorMessage),
+                    )
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
